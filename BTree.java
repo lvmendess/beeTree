@@ -41,4 +41,29 @@ public class BTree {
 
         System.out.println();
     }
+    
+    public void remove(double key) {
+        if (root == null) {
+            System.out.println("The tree is empty");
+            return;
+        }
+        
+        // Call the recursive remove function
+        root.remove(key);
+        
+        // If the root node has 0 keys after removal
+        if (root.n == 0) {
+            // If the tree is not empty
+            if (!root.isLeaf()) {
+                // Make the first child the new root
+                Node temp = root;
+                root = root.children[0];
+                // Free the old root
+                temp = null;
+            } else {
+                // If the tree is now empty
+                root = null;
+            }
+        }
+    }
 }
