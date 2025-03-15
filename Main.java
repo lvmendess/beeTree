@@ -27,7 +27,23 @@ public class Main {
     }*/
 
     public static void main(String[] args) throws FileNotFoundException {
-        RandomAccessFile rafi = new RandomAccessFile("input\\ordExt_teste.txt", null);
-        BTree bt = new BTree(100);
+        LeitorTxt leitor = new LeitorTxt("input\\ordExt_teste.txt");
+        btree2 bt = new btree2(100);
+        double[] linha;
+        int contador = 0;
+        int contadorInsercoes = 0;
+        while((linha = leitor.proximaLinha())[0] > -1){
+            if (contador % 1000 == 0) {
+                System.out.println("Inserindo na arvore a tupla " + Arrays.toString(linha));
+                bt.insert(linha);
+                contadorInsercoes++;
+            }
+            contador++;
+        }
+        System.out.println("Total: " + contador);
+        System.out.println("Inserções: " + contadorInsercoes);
+        bt.printBTree();
+        System.out.println(bt.search(0.3666983707019249));
+        System.out.println(bt.search(0.3666983707019250));
     }
 }
