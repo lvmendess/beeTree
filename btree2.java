@@ -1,14 +1,78 @@
+import java.util.Arrays;
+
 public class btree2 {
     private Node2 root;
+    private LeitorTxt reader;
     private int t;
+    private final int pageSize;
 
-    public btree2(int t) {
+    public btree2(int t, String fileDir) {
+        pageSize = 1000;
         this.t = t;
         root = null;
+        reader = new LeitorTxt(fileDir);
+        buildTree();
+    }
+
+    private void buildTree() {
+        double[] linha;
+        int contador = 0;
+        while((linha = reader.proximaLinha())[0] > -1){
+            if (contador % pageSize == 0) {
+                System.out.println("Inserindo na arvore a tupla " + Arrays.toString(linha));
+                insert(linha);
+            }
+            contador++;
+        }
     }
 
     public Node2 search(double key) {
-        return (root == null) ? null : root.search(key);
+        Node2 node = null;
+        long offset = -1;
+        if (root != null) {
+            node = root.search(key);
+            System.out.println("nó retornado:" + node);
+            if (node != null) {
+                int i = 0;
+                int n = node.n;
+                double[][] keys = node.keys;
+                System.out.println("chave pesquisada: "+ key);
+                while (i < n && key > keys[i][0]) {
+                    i++;
+                    if (i < n && keys[i][0] == key) {
+                        offset = (long) keys[i][1];
+                        System.out.println("chave encontrada: " + keys[i][0] + " offset: " + offset);
+                    } else if (i < n && keys[i][0] > key) {
+                        offset = (long) keys[i-1][1];
+                        System.out.println("chave encontrada: " + keys[i-1][0] + " offset: " + offset);
+                    }
+                }
+                if (searchInFile(key, offset) == -1) {
+                    node = null;
+                }
+            }
+        }
+        return node;
+    }
+
+    private double searchInFile(double key, long offset) {
+        reader.seek(offset);
+        double linha = reader.proximaLinha()[0];
+        int contador = 1;
+        System.out.println("procurando "+key);
+        do {
+            if (contador % pageSize != 0) {
+                if (linha == key) {
+                    System.out.println("achou "+linha);
+                    break;
+                }
+            } else {
+                linha = -1;
+                break;
+            }
+            contador++;
+        } while ((linha = reader.proximaLinha()[0]) > -1);
+        return linha;
     }
 
     public void insert(double[] keyArray) {

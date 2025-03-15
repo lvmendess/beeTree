@@ -1,14 +1,15 @@
 import java.io.BufferedReader;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
+import java.io.IOException;
 import java.io.RandomAccessFile;
 import java.util.StringTokenizer;
 
 public class LeitorTxt {
     private String diretorioArquivo;
-    BufferedReader entradaDeDados;
-    private StringTokenizer strK;
-    RandomAccessFile rafi;
+    //private BufferedReader entradaDeDados;
+    //private StringTokenizer strK;
+    private RandomAccessFile rafi;
     
     /*public LeitorTxt(String diretorioArquivo) throws FileNotFoundException {
         this.diretorioArquivo = diretorioArquivo;
@@ -33,12 +34,20 @@ public class LeitorTxt {
             if (linha != null) {
                 linhaDouble = Double.parseDouble(linha);
             } else {
-                rafi.close();
+                //rafi.close();
             }
         } catch (Exception e) {
             e.printStackTrace();
         }
         return new double[] {linhaDouble, offset};
+    }
+
+    public void seek(long pos){
+        try {
+            rafi.seek(pos);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     /*public double proximaLinha() {

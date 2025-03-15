@@ -1,5 +1,5 @@
 public class Node {  
-    double[][] keys; //guarda as chaves 
+    double[] keys; //guarda as chaves 
     int t; //grau minimo (define range de numero de chaves)
     Node[] children; //guardar ponteiros de chaves
     int n; //numero atual de chaves
@@ -9,7 +9,7 @@ public class Node {
         this.t = t;
         this.leaf = leaf;
 
-        keys = new double[2 * t - 1][2];
+        keys = new double[2 * t - 1];
         children = new Node[2 * t];
         n = 0;
     }
@@ -19,13 +19,13 @@ public class Node {
         return leaf;
     }
 
-    public Node search(double[] key) {
+    public Node search(double key) {
         int i = 0;
 
-        while (i < n && key[0] > keys[i][0])
+        while (i < n && key > keys[i])
             i++;
 
-        if (keys[i][0] >= key[0])
+        if (keys[i] >= key)
             return this;
 
         if (leaf)
@@ -35,24 +35,24 @@ public class Node {
     }
 
     //inserir chave em sub-árvore desse nó
-    public void insertNonFull(double[] key) {
+    public void insertNonFull(double key) {
         int i = n - 1;
 
         if (leaf) {
-            while (i >= 0 && key[0] < keys[i][0]) {
+            while (i >= 0 && key < keys[i]) {
                 keys[i + 1] = keys[i];
                 i--;
             }
             keys[i + 1] = key;
             n++;
         } else {
-            while (i >= 0 && key[0] < keys[i][0])
+            while (i >= 0 && key < keys[i])
                 i--;
             i++;
 
             if (children[i].n == 2 * t - 1) {
                 splitChild(i, children[i]);
-                if (key[0] > keys[i][0])
+                if (key > keys[i])
                     i++;
             }
             children[i].insertNonFull(key);
@@ -105,7 +105,7 @@ public class Node {
     int idx = findKeyIndex(key);
     
     // If the key is present in this node
-    if (idx < n && keys[idx][0] == key) {
+    if (idx < n && keys[idx] == key) {
         // If this is a leaf node, remove from here
         if (isLeaf()) {
             removeFromLeaf(idx);
@@ -146,7 +146,7 @@ public class Node {
     int findKeyIndex(double key) {
         int idx = 0;
         // Find the first key greater than or equal to key
-        while (idx < n && keys[idx][0] < key) {
+        while (idx < n && keys[idx] < key) {
             ++idx;
         }
         return idx;
@@ -165,14 +165,14 @@ public class Node {
 
     // A function to remove the key at idx from a non-leaf node
     void removeFromNonLeaf(int idx) {
-        double key = keys[idx][0];
+        double key = keys[idx];
         
         // If the child that precedes key (children[idx]) has at least t keys,
         // find the predecessor of key in the subtree rooted at children[idx].
         // Replace key by pred and recursively delete pred in children[idx]
         if (children[idx].n >= t) {
             double pred = getPredecessor(idx);
-            keys[idx][0] = pred;
+            keys[idx] = pred;
             children[idx].remove(pred);
         }
         
@@ -181,7 +181,7 @@ public class Node {
         // Replace key by succ and recursively delete succ in children[idx+1]
         else if (children[idx + 1].n >= t) {
             double succ = getSuccessor(idx);
-            keys[idx][0] = succ;
+            keys[idx] = succ;
             children[idx + 1].remove(succ);
         }
         
@@ -203,7 +203,7 @@ public class Node {
         }
         
         // Return the last key of the leaf
-        return current.keys[current.n - 1][0];
+        return current.keys[current.n - 1];
     }
 
     // A function to get the successor of the key at idx in this node
@@ -215,7 +215,7 @@ public class Node {
         }
         
         // Return the first key of the leaf
-        return current.keys[0][0];
+        return current.keys[0];
     }
 
     // A function to fill child node at idx which has less than t-1 keys
@@ -252,7 +252,7 @@ public class Node {
         
         // Moving all keys in children[idx] one step ahead
         for (int i = child.n - 1; i >= 0; --i) {
-            child.keys[i + 1][0] = child.keys[i][0];
+            child.keys[i + 1] = child.keys[i];
         }
         
         // If children[idx] is not a leaf, move all its child pointers one step ahead
