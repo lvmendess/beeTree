@@ -30,7 +30,7 @@ public class LeitorTxt {
         double offset = -1;
         try {
             offset = (double) rafi.getFilePointer();
-            String linha = rafi.readLine(); //guardar linha original na instrução para facilitar escrita
+            String linha = rafi.readLine();
             if (linha != null) {
                 linhaDouble = Double.parseDouble(linha);
             } else {

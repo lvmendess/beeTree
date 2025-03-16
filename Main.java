@@ -27,10 +27,10 @@ public class Main {
     }*/
 
     public static void main(String[] args) throws FileNotFoundException {
-        btree2 bt = new btree2(79066, "..\\arquivosOrdenados\\ordExt_ordenado.txt");
+        btree2 bt = new btree2(40000, "..\\arquivosOrdenados\\ordExt_ordenado.txt");
         bt.printBTree();
-        System.out.println(bt.search(0.0413917774405248));
-        System.out.println(bt.search(0.04139177796998439));
-        System.out.println(bt.search(0.0413917779699844));
+        System.out.println(bt.search(0.0413917774405248)); // registro presente no nó
+        System.out.println(bt.search(0.04139177796998439)); // registro presente no arquivo
+        System.out.println(bt.search(0.0413917779699844)); // registro não presente no arquivo
     }
 }
