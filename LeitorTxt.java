@@ -42,6 +42,14 @@ public class LeitorTxt {
         return new double[] {linhaDouble, offset};
     }
 
+    public void skipLine(){
+        try {
+            rafi.readLine();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
     public void seek(long pos){
         try {
             rafi.seek(pos);

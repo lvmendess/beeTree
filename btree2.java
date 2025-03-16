@@ -7,7 +7,7 @@ public class btree2 {
     private final int pageSize;
 
     public btree2(int t, String fileDir) {
-        pageSize = 1000;
+        pageSize = 100;
         this.t = t;
         root = null;
         reader = new LeitorTxt(fileDir);
@@ -17,10 +17,24 @@ public class btree2 {
     private void buildTree() {
         double[] linha;
         int contador = 0;
+        /*
         while((linha = reader.proximaLinha())[0] > -1){
             if (contador % pageSize == 0) {
                 System.out.println("Inserindo na arvore a tupla " + Arrays.toString(linha));
                 insert(linha);
+            }
+            contador++;
+        }*/
+        while (true) {
+            if (contador % pageSize == 0) {
+                linha = reader.proximaLinha();
+                if (linha[0] == -1) {
+                    break;
+                }
+                System.out.println("Inserindo na arvore a tupla " + Arrays.toString(linha));
+                insert(linha);
+            } else {
+                reader.skipLine();
             }
             contador++;
         }
